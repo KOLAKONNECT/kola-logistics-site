@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kola Logistics • Investor Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --red:#d00; --gold:#DAA520; --green:#2a9d8f; --black:#111; --ink:#0d0d0d; --muted:#6e6e6e;
+  --card:#ffffff; --bg:#fafafa; --border:#eee; --yellow:#F4C430;
+}
+*{box-sizing:border-box}
+body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; color:var(--ink); background:var(--bg)}
+header{padding:38px 20px 26px; background:linear-gradient(180deg, rgba(208,0,0,.08), transparent)}
+.container{max-width:1180px; margin:0 auto; padding:0 20px}
+h1{font-size:44px; margin:0 0 8px; font-weight:800; letter-spacing:-.5px}
+h2{font-size:28px; margin:18px 0 10px; font-weight:800}
+h3{margin:6px 0 10px}
+p.lead{font-size:18px; color:var(--muted); margin:0}
+.pills{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+.pill{display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:999px; background:#fff; border:1px solid var(--border); font-weight:700; font-size:13px}
+.dot{width:10px; height:10px; border-radius:50%}
+.dot.red{background:var(--red)}
+.dot.gold{background:var(--gold)}
+.dot.green{background:var(--green)}
+.dot.black{background:var(--black)}
+.dot.yellow{background:var(--yellow)}
+.brand-buttons{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+.brand-btn{border:none; padding:10px 14px; border-radius:12px; color:#fff; font-weight:800}
+.btn-express{background:linear-gradient(90deg, var(--red), var(--gold))}
+.btn-local{background:linear-gradient(90deg, var(--red), var(--green))}
+.btn-rural{background:linear-gradient(90deg, var(--red), var(--black))}
+.btn-konnect{background:linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--black))}
+.tabs{display:flex; gap:10px; margin:18px 0 0; flex-wrap:wrap}
+.tab{border:1px solid var(--red); background:var(--red); color:#fff; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:800}
+.tab.active{box-shadow:0 0 0 2px #fff inset}
+.section{display:none}
+.section.active{display:block}
+.grid{display:grid; gap:16px}
+.grid-2{grid-template-columns:1fr}
+.grid-3{grid-template-columns:1fr}
+@media(min-width:980px){ .grid-2{grid-template-columns:1fr 1fr} .grid-3{grid-template-columns:1fr 1fr 1fr} }
+.card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.map-wrap{height:420px; border-radius:12px; overflow:hidden; border:1px solid var(--border)}
+table{width:100%; border-collapse:collapse; font-size:14px}
+th, td{padding:10px 8px; border-bottom:1px solid var(--border); text-align:left}
+th{font-size:13px; color:#555; text-transform:uppercase; letter-spacing:.5px}
+.badge{padding:2px 8px; border-radius:999px; font-size:12px; color:#fff; background:#333}
+.badge.express{background:var(--gold); color:#000}
+.badge.local{background:var(--green)}
+.badge.rural{background:var(--black)}
+.badge.konnect{background:var(--yellow); color:#000; border:1px solid var(--black)}
+.fare{font-size:22px; font-weight:800}
+.muted{color:#757575}
+footer{padding:40px 20px; color:#666; text-align:center}
+.motto{font-weight:800; font-size:22px}
+canvas{background:#fff; border-radius:12px; border:1px solid var(--border)}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>Kola Logistics</h1>
+    <p class="lead">Concierge. Comfort. Convenience.</p>
+    <div class="pills">
+      <span class="pill"><span class="dot red"></span> Brand Red</span>
+      <span class="pill"><span class="dot red"></span><span class="dot gold"></span> Kola Express</span>
+      <span class="pill"><span class="dot red"></span><span class="dot green"></span> Kola Local</span>
+      <span class="pill"><span class="dot red"></span><span class="dot black"></span> Kola Rural</span>
+      <span class="pill"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="dot black"></span> Kola Konnect</span>
+    </div>
+    <div class="brand-buttons">
+      <button class="brand-btn btn-rural" data-target="rural">Rural ($20)</button>
+      <button class="brand-btn btn-express" data-target="express">Express ($25)</button>
+      <button class="brand-btn btn-local" data-target="local">Local ($5)</button>
+      <button class="brand-btn btn-konnect" data-target="konnect">Konnect ($150)</button>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-target="rural">Rural</button>
+      <button class="tab" data-target="express">Express</button>
+      <button class="tab" data-target="local">Local</button>
+      <button class="tab" data-target="konnect">Konnect</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- RURAL -->
+  <section id="rural" class="section active">
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>Kola Rural — Flat Fare Corridors <span class="badge rural">$20</span></h2>
+        <p>20 buses (two per route). Monrovia ⇄ county hubs: Buchanan, Gbarnga, Ganta, Voinjama, Harper, Bo‑Waterside, Tubmanburg, Robertsport, Zwedru, Greenville, Kakata, <strong>Sanniquellie</strong>.</p>
+        <div id="mapRural" class="map-wrap"></div>
+      </div>
+      <div class="card">
+        <h2>Fare Positioning & Timetables</h2>
+        <table>
+          <tr><th>Mode</th><th>Fare</th><th>Notes</th></tr>
+          <tr><td>Kola Rural</td><td>$20</td><td>Flat fare, premium coaches</td></tr>
+          <tr><td>Public Minibus/Taxi</td><td>Varies</td><td>Uncertain timing & safety</td></tr>
+        </table>
+        <h3>Sample Timetables</h3>
+        <table>
+          <tr><th>Corridor</th><th>Depart Monrovia</th><th>Trips/Day</th><th>Notes</th></tr>
+          <tr><td>Buchanan</td><td>06:30 / 15:30</td><td>2 per bus</td><td>AM & PM</td></tr>
+          <tr><td>Gbarnga</td><td>07:00 / 16:00</td><td>2 per bus</td><td>Staggered</td></tr>
+          <tr><td>Sanniquellie</td><td>07:30 / 16:30</td><td>2 per bus</td><td>New high‑demand route</td></tr>
+        </table>
+        <h3>Operations & Break-even</h3>
+        <ul>
+          <li>Two buses per corridor enable daily out‑and‑back rotations</li>
+          <li>Flat $20 simplifies marketing; luggage included</li>
+          <li>Break-even remains very low due to strong seat economics</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Revenue Forecast (USD)</h2>
+      <div class="grid grid-2">
+        <div><canvas id="chartRural"></canvas></div>
+        <div>
+          <table>
+            <tr><th>Period</th><th>Revenue</th><th>Costs</th><th>Net Profit</th></tr>
+            <tr><td>Daily (20 buses)</td><td>$320,000</td><td>$4,000</td><td><strong>$316,000</strong></td></tr>
+            <tr><td>Monthly (30d)</td><td>$9,600,000</td><td>$120,000</td><td><strong>$9,480,000</strong></td></tr>
+            <tr><td>Quarterly (90d)</td><td>$28,800,000</td><td>$360,000</td><td><strong>$28,440,000</strong></td></tr>
+          </table>
+          <p class="muted">Assumptions: 40 pax × $20 × 20 trips/bus/day × 20 buses; opex $10/trip.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPRESS -->
+  <section id="express" class="section">
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>Kola Express — Premium Airport Shuttle <span class="badge express">$25</span></h2>
+        <p>Direct Monrovia (Camp Johnson Rd) ⇄ Roberts Intl Airport (ROB). 5 buses, <strong>30 trips/day</strong>, aligned to arrivals/departures.</p>
+        <div id="mapExpress" class="map-wrap"></div>
+      </div>
+      <div class="card">
+        <h2>Fare Positioning & Timetable</h2>
+        <table>
+          <tr><th>Mode</th><th>Fare</th><th>Notes</th></tr>
+          <tr><td>Kola Express</td><td>$25</td><td>Premium coach, luggage, fixed timetable</td></tr>
+          <tr><td>Local Minibus</td><td>~$2.75</td><td>Cramped, irregular</td></tr>
+          <tr><td>Shared Taxi</td><td>$30–$45</td><td>Limited luggage</td></tr>
+        </table>
+        <h3>Sample Timetable</h3>
+        <table>
+          <tr><th>Depart Monrovia</th><th>Arrive ROB</th><th>Notes</th></tr>
+          <tr><td>02:00</td><td>03:15</td><td>AT563 window</td></tr>
+          <tr><td>05:00</td><td>06:15</td><td>KP21 departure</td></tr>
+          <tr><td>14:00</td><td>15:15</td><td>ET943 arrival bank</td></tr>
+        </table>
+        <h3>Ops & Break-even</h3>
+        <ul>
+          <li>Travel time ~1h15m; 45m airport layover</li>
+          <li>Break-even ≈ 2 pax/trip at $25</li>
+          <li>GPS & dispatch control</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Revenue Forecast (USD)</h2>
+      <div class="grid grid-2">
+        <div><canvas id="chartExpress"></canvas></div>
+        <div>
+          <table>
+            <tr><th>Period</th><th>Revenue</th><th>Costs</th><th>Net Profit</th></tr>
+            <tr><td>Daily</td><td>$30,000</td><td>$1,350</td><td><strong>$28,650</strong></td></tr>
+            <tr><td>Monthly (30d)</td><td>$900,000</td><td>$40,500</td><td><strong>$859,500</strong></td></tr>
+            <tr><td>Quarterly (90d)</td><td>$2,700,000</td><td>$121,500</td><td><strong>$2,578,500</strong></td></tr>
+          </table>
+          <p class="muted">Assumptions: 40 pax × $25 × 30 trips/day; opex $5/trip + $1,200 fixed/day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCAL -->
+  <section id="local" class="section">
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>Kola Local — Commuter Double‑Deckers <span class="badge local">$5</span></h2>
+        <p>Firestone ⇄ Monrovia. 2 double‑deckers, 83 seats each, <strong>16 trips/bus/day</strong> (32 total), 5am–10pm.</p>
+        <div id="mapLocal" class="map-wrap"></div>
+      </div>
+      <div class="card">
+        <h2>Fare Positioning & Timetable</h2>
+        <table>
+          <tr><th>Mode</th><th>Fare</th><th>Notes</th></tr>
+          <tr><td>Kola Local</td><td>$5</td><td>Guaranteed seat, fixed timetable</td></tr>
+          <tr><td>Local Minibus</td><td>~$2.75</td><td>Cramped, variable</td></tr>
+          <tr><td>Shared Taxi</td><td>$30+</td><td>Not commuter-friendly</td></tr>
+        </table>
+        <h3>Sample Timetable</h3>
+        <table>
+          <tr><th>Depart Firestone</th><th>Arrive Monrovia</th><th>Notes</th></tr>
+          <tr><td>05:00</td><td>06:15</td><td>AM peak</td></tr>
+          <tr><td>06:30</td><td>07:45</td><td>AM peak</td></tr>
+          <tr><td>17:00</td><td>18:15</td><td>PM peak</td></tr>
+        </table>
+        <h3>Ops & Break-even</h3>
+        <ul>
+          <li>High-capacity boarding; quick terminal turnover</li>
+          <li>Low break-even load from low per-trip opex</li>
+          <li>Cash & mobile money acceptance</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Revenue Forecast (USD)</h2>
+      <div class="grid grid-2">
+        <div><canvas id="chartLocal"></canvas></div>
+        <div>
+          <table>
+            <tr><th>Period</th><th>Revenue</th><th>Costs</th><th>Net Profit</th></tr>
+            <tr><td>Daily</td><td>$13,280</td><td>$160</td><td><strong>$13,120</strong></td></tr>
+            <tr><td>Monthly (30d)</td><td>$398,400</td><td>$4,800</td><td><strong>$393,600</strong></td></tr>
+            <tr><td>Quarterly (90d)</td><td>$1,195,200</td><td>$14,400</td><td><strong>$1,180,800</strong></td></tr>
+          </table>
+          <p class="muted">Assumptions: 83 pax × $5 × 32 trips/day; opex $5/trip.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONNECT -->
+  <section id="konnect" class="section">
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>Kola Konnect — Cross‑Border Coach <span class="badge konnect">$150</span></h2>
+        <p>International routes with border concierge: Monrovia ⇄ Conakry, Freetown, Abidjan, Accra, Lomé. Premium 60‑seat coaches.</p>
+        <div id="mapKonnect" class="map-wrap"></div>
+      </div>
+      <div class="card">
+        <h2>Fare Cards & Timetables</h2>
+        <div class="grid grid-2">
+          <div>
+            <h3>Fare Cards</h3>
+            <table>
+              <tr><th>Route</th><th>Fare</th><th>Notes</th></tr>
+              <tr><td>Monrovia ⇄ Conakry</td><td>$150</td><td>~24–36h</td></tr>
+              <tr><td>Monrovia ⇄ Freetown</td><td>$150</td><td>~8–12h</td></tr>
+              <tr><td>Monrovia ⇄ Abidjan</td><td>$150</td><td>~15–18h</td></tr>
+              <tr><td>Monrovia ⇄ Accra</td><td>$150</td><td>~24–30h</td></tr>
+              <tr><td>Monrovia ⇄ Lomé</td><td>$150</td><td>~30–36h</td></tr>
+            </table>
+          </div>
+          <div>
+            <h3>Timetables (Phase 1)</h3>
+            <table>
+              <tr><th>Route</th><th>Depart</th><th>Days</th><th>Notes</th></tr>
+              <tr><td>Monrovia → Freetown</td><td>08:00</td><td>Daily</td><td>Return same/next day</td></tr>
+              <tr><td>Monrovia → Conakry</td><td>07:30</td><td>Mon • Wed • Fri</td><td>Return next day</td></tr>
+              <tr><td>Monrovia → Abidjan</td><td>07:00</td><td>Tue • Thu • Sat</td><td>Return next day</td></tr>
+              <tr><td>Monrovia → Accra</td><td>06:30</td><td>Tue • Thu • Sun</td><td>Via Abidjan corridor</td></tr>
+              <tr><td>Monrovia → Lomé</td><td>06:00</td><td>Mon • Fri</td><td>Via Accra corridor</td></tr>
+            </table>
+          </div>
+        </div>
+        <h3>Ops & Break-even</h3>
+        <ul>
+          <li>Border concierge & pre-check reduce dwell time</li>
+          <li>60 seats; luggage included; premium onboard amenities</li>
+          <li>Per-trip opex placeholder: $1,800 (fuel, crew, tolls, border ops)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Revenue & Net Profit (USD)</h2>
+      <div class="grid grid-2">
+        <div><canvas id="chartKonnect"></canvas></div>
+        <div>
+          <table>
+            <tr><th>Metric</th><th>Value</th></tr>
+            <tr><td>Seats × Fare × Load (per one‑way)</td><td>60 × $150 × 75% = <strong>$6,750 revenue</strong></td></tr>
+            <tr><td>Per‑trip Opex (placeholder)</td><td>$1,800</td></tr>
+            <tr><td><strong>Net per one‑way trip</strong></td><td><strong>$4,950</strong></td></tr>
+            <tr><td>Daily revenue (5 one‑ways)</td><td>$33,750</td></tr>
+            <tr><td>Monthly net (30d)</td><td><strong>$742,500</strong></td></tr>
+          </table>
+          <p class="muted">Adjust load factor (50–95%) and opex ($1,200–$2,500) to test scenarios.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="motto">Concierge. Comfort. Convenience.</div>
+    <div class="muted">© Kola Logistics</div>
+  </div>
+</footer>
+
+<script>
+// Tabs and brand buttons
+const tabs = document.querySelectorAll('.tab');
+const brands = document.querySelectorAll('.brand-btn');
+const sections = document.querySelectorAll('.section');
+function showSection(id){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.target===id));
+  sections.forEach(s=>s.classList.toggle('active', s.id===id));
+  setTimeout(()=>{
+    mapRural.invalidateSize(); mapExpress.invalidateSize(); mapLocal.invalidateSize(); mapKonnect.invalidateSize();
+  },200);
+}
+tabs.forEach(btn=>btn.addEventListener('click',()=>showSection(btn.dataset.target)));
+brands.forEach(btn=>btn.addEventListener('click',()=>showSection(btn.dataset.target)));
+
+// Coordinates
+const C = {
+  "Camp Johnson Road, Monrovia":[6.305831, -10.798877],
+  "ELWA Junction":[6.264587, -10.703944],
+  "Roberts Intl Airport":[6.2337, -10.3573],
+  "Harbel / Firestone":[6.283, -10.350],
+  "Monrovia City Center":[6.328034, -10.797788],
+  "Conakry":[9.641185, -13.578401],
+  "Freetown":[8.465, -13.231722],
+  "Abidjan":[5.345317, -4.024429],
+  "Accra":[5.603717, -0.186964],
+  "Lomé":[6.131944, 1.222778],
+  "Buchanan":[5.880833, -10.046667],
+  "Gbarnga":[6.995561, -9.471664],
+  "Ganta (Nimba)":[7.231944, -8.986389],
+  "Voinjama (Lofa)":[8.421389, -9.747222],
+  "Harper (Maryland)":[4.375, -7.716667],
+  "Bo-Waterside (Border)":[6.93, -11.39],
+  "Tubmanburg (Bomi)":[6.870833, -10.8225],
+  "Robertsport (Cape Mount)":[6.753333, -11.368889],
+  "Zwedru (Grand Gedeh)":[6.066667, -8.133333],
+  "Greenville (Sinoe)":[5.0125, -9.038889],
+  "Kakata (Margibi)":[6.525, -10.353333],
+  "Sanniquellie":[7.371, -8.713]
+};
+
+// Rural map (+ Sanniquellie)
+const mapRural = L.map('mapRural').setView([6.3, -10.75], 7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(mapRural);
+const ruralTargets = ["Buchanan","Gbarnga","Ganta (Nimba)","Sanniquellie","Voinjama (Lofa)","Harper (Maryland)","Bo-Waterside (Border)","Tubmanburg (Bomi)","Robertsport (Cape Mount)","Zwedru (Grand Gedeh)","Greenville (Sinoe)","Kakata (Margibi)"];
+const ruralLines=[];
+ruralTargets.forEach(name=>{
+  const line=L.polyline([C["Monrovia City Center"],C[name]],{color:'#111',weight:5}).addTo(mapRural);
+  ruralLines.push(line);
+  L.marker(C[name]).addTo(mapRural).bindPopup(name);
+});
+L.marker(C["Monrovia City Center"]).addTo(mapRural).bindPopup("Monrovia City Center");
+mapRural.fitBounds(L.featureGroup(ruralLines).getBounds().pad(0.25));
+
+// Express map
+const mapExpress = L.map('mapExpress').setView([6.3, -10.75], 10);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(mapExpress);
+const expressLine=L.polyline([C["Camp Johnson Road, Monrovia"],C["ELWA Junction"],C["Roberts Intl Airport"]],{color:'#DAA520',weight:5}).addTo(mapExpress);
+["Camp Johnson Road, Monrovia","ELWA Junction","Roberts Intl Airport"].forEach(n=>L.marker(C[n]).addTo(mapExpress).bindPopup(n));
+mapExpress.fitBounds(expressLine.getBounds().pad(0.2));
+
+// Local map
+const mapLocal = L.map('mapLocal').setView([6.3, -10.75], 10);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(mapLocal);
+const localLine=L.polyline([C["Harbel / Firestone"],C["ELWA Junction"],C["Monrovia City Center"]],{color:'#2a9d8f',weight:5}).addTo(mapLocal);
+["Harbel / Firestone","ELWA Junction","Monrovia City Center"].forEach(n=>L.marker(C[n]).addTo(mapLocal).bindPopup(n));
+mapLocal.fitBounds(localLine.getBounds().pad(0.2));
+
+// Konnect map
+const mapKonnect = L.map('mapKonnect').setView([6.5, -8.5], 6);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(mapKonnect);
+const konnectPairs=[["Monrovia City Center","Conakry"],["Monrovia City Center","Freetown"],["Monrovia City Center","Abidjan"],["Monrovia City Center","Accra"],["Monrovia City Center","Lomé"]];
+const konnectLines=[];
+konnectPairs.forEach(([a,b])=>{
+  const line=L.polyline([C[a],C[b]],{color:'#d00',weight:5}).addTo(mapKonnect);
+  konnectLines.push(line);
+  L.marker(C[b]).addTo(mapKonnect).bindPopup(b);
+});
+L.marker(C["Monrovia City Center"]).addTo(mapKonnect).bindPopup("Monrovia City Center");
+mapKonnect.fitBounds(L.featureGroup(konnectLines).getBounds().pad(0.25));
+
+// Charts
+function barChart(id, labels, values, color){
+  const ctx=document.getElementById(id);
+  new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Net Profit (USD)',data:values,backgroundColor:color}]},options:{responsive:true,scales:{y:{beginAtZero:true}}}});
+}
+// Rural ($20)
+barChart('chartRural',['Daily','Monthly','Quarterly'],[316000,9480000,28440000],'rgba(17,17,17,0.85)');
+// Express original
+barChart('chartExpress',['Daily','Monthly','Quarterly'],[28650,859500,2578500],'rgba(218,165,32,0.85)');
+// Local original
+barChart('chartLocal',['Daily','Monthly','Quarterly'],[13120,393600,1180800],'rgba(42,157,143,0.85)');
+// Konnect
+(function(){
+  const ctx=document.getElementById('chartKonnect');
+  new Chart(ctx,{type:'bar',data:{labels:['Per One‑way','Daily (5 trips)','Monthly'],datasets:[{label:'Net (USD)',data:[4950,24750,742500],backgroundColor:'rgba(244,196,48,0.9)'}]},options:{responsive:true,scales:{y:{beginAtZero:true}}}});
+})();
+</script>
+</body>
+</html>

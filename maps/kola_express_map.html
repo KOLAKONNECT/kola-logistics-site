@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_7f2ab74eeb38373fe64d86df09da74e1 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_7f2ab74eeb38373fe64d86df09da74e1" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_7f2ab74eeb38373fe64d86df09da74e1 = L.map(
+                "map_7f2ab74eeb38373fe64d86df09da74e1",
+                {
+                    center: [6.3, -10.75],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_7fcf1ad1f0178b32955557860f691892 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_7f2ab74eeb38373fe64d86df09da74e1);
+        
+    
+            var poly_line_e4049142102c161288835746dc640d15 = L.polyline(
+                [[6.305831, -10.798877], [6.264587, -10.703944], [6.2337, -10.3573]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_7f2ab74eeb38373fe64d86df09da74e1);
+        
+    
+            var marker_f593c58dc5cb3997713c17cbc1690f1d = L.marker(
+                [6.305831, -10.798877],
+                {}
+            ).addTo(map_7f2ab74eeb38373fe64d86df09da74e1);
+        
+    
+        var popup_ea07fdec21d6f78988b1823608338637 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9e8a541e2086eabeeaf5fc8bc9596078 = $(`<div id="html_9e8a541e2086eabeeaf5fc8bc9596078" style="width: 100.0%; height: 100.0%;">Camp Johnson Road, Monrovia</div>`)[0];
+            popup_ea07fdec21d6f78988b1823608338637.setContent(html_9e8a541e2086eabeeaf5fc8bc9596078);
+        
+
+        marker_f593c58dc5cb3997713c17cbc1690f1d.bindPopup(popup_ea07fdec21d6f78988b1823608338637)
+        ;
+
+        
+    
+    
+            var marker_17915eeecdcfa39b3aa7656c100c9079 = L.marker(
+                [6.264587, -10.703944],
+                {}
+            ).addTo(map_7f2ab74eeb38373fe64d86df09da74e1);
+        
+    
+        var popup_01074ac45ce789c72d9bc2dfc725f21b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_4b6df49581fc4491beb4658d0ac809f3 = $(`<div id="html_4b6df49581fc4491beb4658d0ac809f3" style="width: 100.0%; height: 100.0%;">ELWA Junction</div>`)[0];
+            popup_01074ac45ce789c72d9bc2dfc725f21b.setContent(html_4b6df49581fc4491beb4658d0ac809f3);
+        
+
+        marker_17915eeecdcfa39b3aa7656c100c9079.bindPopup(popup_01074ac45ce789c72d9bc2dfc725f21b)
+        ;
+
+        
+    
+    
+            var marker_a998ba385de165bd4041cee1a3b19133 = L.marker(
+                [6.2337, -10.3573],
+                {}
+            ).addTo(map_7f2ab74eeb38373fe64d86df09da74e1);
+        
+    
+        var popup_d6d7c1f2c7b5df23cfe0daf20d1be536 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_5affc4707db19e000d81f5d545d2a86e = $(`<div id="html_5affc4707db19e000d81f5d545d2a86e" style="width: 100.0%; height: 100.0%;">Roberts International Airport (ROB)</div>`)[0];
+            popup_d6d7c1f2c7b5df23cfe0daf20d1be536.setContent(html_5affc4707db19e000d81f5d545d2a86e);
+        
+
+        marker_a998ba385de165bd4041cee1a3b19133.bindPopup(popup_d6d7c1f2c7b5df23cfe0daf20d1be536)
+        ;
+
+        
+    
+</script>
+</html>
